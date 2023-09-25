@@ -3,7 +3,11 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-dependencies = ["{{cookiecutter.upstream_repo}}", "mlflow", "labelcomposer"]
+dependencies = [
+  "{{cookiecutter.my_repo_dep}}@{{cookiecutter.my_repo_dep_branch}}",
+  "mlflow",
+  "labelcomposer",
+]
 name = "{{cookiecutter.project_slug}}"
 dynamic = ["version"]
 description = '{{cookiecutter.experiment_description}}'
