@@ -42,11 +42,24 @@ def edit_pyproject_toml(dependency_url, branch, latest_commit_hash):
                 modified_lines.append(line)
     with open("pyproject.toml", "w") as f:
         f.writelines(modified_lines)
+        
+
+def process_dep(dependency):
+    if dependency["use_latest_commit"]:
+        repo_url = get_git_url(dependency["repo"])
+        latest_commit_hash = get_latest_commit_hash(repo_url, dependency["branch"])
+        edit_pyproject_toml(dependency["repo"], 
+                            dependency["branch"], 
+                            latest_commit_hash)        
 
 def main():
-    if {{cookiecutter.my_repo_use_latest_commit}}:
-        repo_url = get_git_url("{{cookiecutter.my_repo_dep}}")
-        latest_commit_hash = get_latest_commit_hash(repo_url, "{{cookiecutter.my_repo_dep_branch}}")
-        edit_pyproject_toml("{{cookiecutter.my_repo_dep}}", "{{cookiecutter.my_repo_dep_branch}}", latest_commit_hash)        
+    deps_dict_of_lists = {{cookiecutter.my_repo_deps}}
+    n_deps = len(list(deps_dict_of_lists.values())[0])
+    deps_list_of_dicts = [{key: value[i] for key, value in deps_dict_of_lists.items()} for i in range(n_deps)]
+
+    for dep in deps_list_of_dicts:
+        process_dep(dep)
+       
+
 if __name__ == "__main__":
     main()

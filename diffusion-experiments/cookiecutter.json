@@ -5,7 +5,18 @@
     "author_email": "heinrichl@janelia.hhmi.org",
     "parent_repo": "https://github.com/saalfeldlab/diffusion-experiments",
     "experiment_description": "A diffusion network to generate EM labels.",
-    "my_repo_dep": "denoising-diffusion-pytorch@git+ssh://git@github.com/neptunes5thmoon/denoising-diffusion-pytorch.git",
-    "my_repo_dep_branch": "main",
-    "my_repo_use_latest_commit": true
+    "my_repo_deps": {
+        "repo": [
+            "denoising-diffusion-pytorch@git+ssh://git@github.com/neptunes5thmoon/denoising-diffusion-pytorch.git",
+            "labelcomposer@git+ssh://git@github.com/saalfeldlab/labelcomposer.git"
+        ],
+        "branch": [
+            "main",
+            "main"
+        ],
+        "use_latest_commit": [
+            true,
+            true
+        ]
+    }
 }

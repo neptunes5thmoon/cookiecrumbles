@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 dependencies = [
-  "{{cookiecutter.my_repo_dep}}@{{cookiecutter.my_repo_dep_branch}}",
-  "mlflow",
-  "labelcomposer",
+  {% for i in range(0, cookiecutter.my_repo_deps.repo|length) %}"{{cookiecutter.my_repo_deps.repo[i]}}@{{cookiecutter.my_repo_deps.branch[i]}}",
+  {% endfor -%}
+  "mlflow"
 ]
 name = "{{cookiecutter.project_slug}}"
 dynamic = ["version"]
