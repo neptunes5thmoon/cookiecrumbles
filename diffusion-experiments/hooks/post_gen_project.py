@@ -16,11 +16,12 @@ def get_git_url(dependency_string):
         github_url = match.group(1)
         return github_url
     else:
-        raise ValueError(f"Could not decode git url from dependency {dependency_string}")
+        raise ValueError(
+            f"Could not decode git url from dependency {dependency_string}"
+        )
 
 
 def get_latest_commit_hash(repo_url, branch):
-    
     g = git.cmd.Git()
     # Get the latest commit hash without cloning the repository
     commits = g.ls_remote("--heads", repo_url).split("\n")
@@ -29,6 +30,7 @@ def get_latest_commit_hash(repo_url, branch):
         if reference.endswith(f"/{branch}"):
             return hash
     raise ValueError(f"Branch '{branch}' not found in the remote repository {repo_url}")
+
 
 def edit_pyproject_toml(dependency_url, branch, latest_commit_hash):
     modified_lines = []
@@ -42,24 +44,28 @@ def edit_pyproject_toml(dependency_url, branch, latest_commit_hash):
                 modified_lines.append(line)
     with open("pyproject.toml", "w") as f:
         f.writelines(modified_lines)
-        
+
 
 def process_dep(dependency):
     if dependency["use_latest_commit"]:
         repo_url = get_git_url(dependency["repo"])
         latest_commit_hash = get_latest_commit_hash(repo_url, dependency["branch"])
-        edit_pyproject_toml(dependency["repo"], 
-                            dependency["branch"], 
-                            latest_commit_hash)        
+        edit_pyproject_toml(
+            dependency["repo"], dependency["branch"], latest_commit_hash
+        )
+
 
 def main():
     deps_dict_of_lists = {{cookiecutter.my_repo_deps}}
     n_deps = len(list(deps_dict_of_lists.values())[0])
-    deps_list_of_dicts = [{key: value[i] for key, value in deps_dict_of_lists.items()} for i in range(n_deps)]
+    deps_list_of_dicts = [
+        {key: value[i] for key, value in deps_dict_of_lists.items()}
+        for i in range(n_deps)
+    ]
 
     for dep in deps_list_of_dicts:
         process_dep(dep)
-       
+
 
 if __name__ == "__main__":
     main()
