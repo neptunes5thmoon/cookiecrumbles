@@ -1,5 +1,6 @@
 {
-    "experiment_name": "A name for the experiment",
+    "project_name": "The current project name",
+    "experiment_name": "Name for this experiment (which is part of the project)",
     "project_slug": "{{cookiecutter.experiment_name.lower().replace(' ', '_').replace('-','_')}}",
     "author": "Larissa Heinrich",
     "author_email": "heinrichl@janelia.hhmi.org",

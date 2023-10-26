@@ -6,7 +6,9 @@ build-backend = "hatchling.build"
 dependencies = [
   {% for i in range(0, cookiecutter.my_repo_deps.repo|length) %}"{{cookiecutter.my_repo_deps.repo[i]}}@{{cookiecutter.my_repo_deps.branch[i]}}",
   {% endfor -%}
-  "mlflow"
+  "mlflow",
+  "pydantic",
+  "GitPython"
 ]
 name = "{{cookiecutter.project_slug}}"
 dynamic = ["version"]
@@ -26,8 +28,10 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
 ]
+[project.scripts]
+train = "{{cookiecutter.project_slug}}.train:run"
+mlflowui = "{{cookiecutter.project_slug}}.utility:start_ui"
 
 [project.urls]
 Documentation = "{{cookiecutter.parent_repo}}/{{cookiecutter.project_slug}}/#readme"
