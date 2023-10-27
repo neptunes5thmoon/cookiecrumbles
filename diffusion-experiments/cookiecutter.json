@@ -12,7 +12,7 @@
             "labelcomposer@git+ssh://git@github.com/saalfeldlab/labelcomposer.git"
         ],
         "branch": [
-            "main",
+            "mymain",
             "main"
         ],
         "use_latest_commit": [
