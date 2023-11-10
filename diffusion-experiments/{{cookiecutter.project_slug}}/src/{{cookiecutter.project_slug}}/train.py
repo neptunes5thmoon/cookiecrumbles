@@ -46,7 +46,9 @@ def run():
         diffusion = config.diffusion.get_constructor()(
             architecture, image_size=config.image_size, **config.diffusion.model_dump()
         )
-        dataset = config.data.get_constructor()(config.data.data_dir, config.image_size)
+        data_args = config.data
+        data_args["image_size"] = config.image_size
+        dataset = config.data.get_constructor()(**data_args)
         parsed_artifact_uri = urlparse(mlflow.get_artifact_uri())
         if parsed_artifact_uri.scheme != "file":
             raise NotImplementedError(

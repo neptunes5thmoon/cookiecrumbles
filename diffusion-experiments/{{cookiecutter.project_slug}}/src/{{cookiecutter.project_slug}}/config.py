@@ -1,10 +1,11 @@
-from typing import Dict, Literal, Optional, Tuple, Union
+from typing import Dict, Literal, Optional, Tuple, Union, Sequence
 
 from denoising_diffusion_pytorch import (
     GaussianDiffusion,
     SimpleDataset,
     Unet,
     ZarrDataset,
+    CellMapDatasets3Das2D
 )
 from pydantic import BaseModel, Field
 
@@ -58,6 +59,17 @@ class ZarrDataConfig(BaseModel):
     def get_constructor(self):
         return ZarrDataset
 
+class CellMapDatasets3Das2DConfig(BaseModel):
+    data_paths: Sequence[str]
+    class_list: Sequence[str]
+    scale: Dict[Literal["x","y","z"],int]
+    augment_horizontal_flip: bool = True
+    augment_vertical_flip: bool = True
+    annotation_paths: Optional[Sequence[Union[str,None]]]
+    crop_lists: Optional[Sequence[Union[None,Sequence[str]]]]
+    raw_datasets: Optional[Sequence[str]]
+    def get_constructor(self):
+        return CellMapDatasets3Das2D
 
 class TrackingConfig(BaseModel):
     experiment_name: str
