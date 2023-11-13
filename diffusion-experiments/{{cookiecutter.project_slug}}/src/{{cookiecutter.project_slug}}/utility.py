@@ -29,7 +29,8 @@ def start_ui() -> None:
     command = ["mlflow", "ui", "--backend-store-uri", config.tracking.tracking_uri]
     subprocess.run(command)
 
-def get_repo_and_commit_cwd(remote_name: Optional[str] = "origin") -> Tuple[str,str]:
+
+def get_repo_and_commit_cwd(remote_name: Optional[str] = "origin") -> Tuple[str, str]:
     repo = git.Repo(search_parent_directories=True)
     if len(repo.remotes) == 0 or remote_name is None:
         remote = None
@@ -39,7 +40,6 @@ def get_repo_and_commit_cwd(remote_name: Optional[str] = "origin") -> Tuple[str,
         repo_name = repo.working_dir
     else:
         repo_name = remote.url
-    
+
     commit_hash = repo.head.commit.hexsha
     return repo_name, commit_hash
-

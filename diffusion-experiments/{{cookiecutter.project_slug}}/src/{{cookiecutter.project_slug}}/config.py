@@ -1,12 +1,6 @@
 from typing import Dict, Literal, Optional, Tuple, Union, Sequence
 
-from denoising_diffusion_pytorch import (
-    GaussianDiffusion,
-    SimpleDataset,
-    Unet,
-    ZarrDataset,
-    CellMapDatasets3Das2D
-)
+from denoising_diffusion_pytorch import GaussianDiffusion, SimpleDataset, Unet, ZarrDataset, CellMapDatasets3Das2D, CellMapDataset3Das2D
 from pydantic import BaseModel, Field
 
 
@@ -59,17 +53,33 @@ class ZarrDataConfig(BaseModel):
     def get_constructor(self):
         return ZarrDataset
 
-class CellMapDatasets3Das2DConfig(BaseModel):
+class CellMapDataset3Das2DConfig(BaseModel):
+    data_type: Literal["cellmap3das2d_single"]
     data_paths: Sequence[str]
     class_list: Sequence[str]
-    scale: Dict[Literal["x","y","z"],int]
+    scale: Dict[Literal["x", "y", "z"], int]
     augment_horizontal_flip: bool = True
     augment_vertical_flip: bool = True
-    annotation_paths: Optional[Sequence[Union[str,None]]]
-    crop_lists: Optional[Sequence[Union[None,Sequence[str]]]]
-    raw_datasets: Optional[Sequence[str]]
+    annotation_path: Optional[str] = None
+    crop_list: Optional[Sequence[str]] = None
+    raw_dataset: Optional[str] - None
+    def get_constructor(self):
+        return CellMapDataset3Das2D
+
+class CellMapDatasets3Das2DConfig(BaseModel):
+    data_type: Literal["cellmap3das2d"]
+    data_paths: Sequence[str]
+    class_list: Sequence[str]
+    scale: Dict[Literal["x", "y", "z"], int]
+    augment_horizontal_flip: bool = True
+    augment_vertical_flip: bool = True
+    annotation_paths: Union[None, Sequence[Union[str, None]]] = None
+    crop_lists: Union[None, Sequence[Union[None, Sequence[str]]]] = None
+    raw_datasets: Union[None, Sequence[str]] = None
+
     def get_constructor(self):
         return CellMapDatasets3Das2D
+
 
 class TrackingConfig(BaseModel):
     experiment_name: str
@@ -82,8 +92,6 @@ class ExperimentConfig(BaseModel):
     image_size: int
     architecture: UnetConfig  # turn this into union to add more architectures
     diffusion: GaussianDiffusionConfig  # turn this into union to add more architectures
-    data: Union[SimpleDataConfig, ZarrDataConfig] = Field(
-        ..., discriminator="data_type"
-    )
+    data: Union[SimpleDataConfig, ZarrDataConfig, CellMapDatasets3Das2DConfig, CellMapDataset3Das2DConfig] = Field(..., discriminator="data_type")
     training: TrainingConfig
     tracking: TrackingConfig

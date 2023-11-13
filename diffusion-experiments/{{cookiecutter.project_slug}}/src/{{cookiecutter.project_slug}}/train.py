@@ -3,7 +3,7 @@ from urllib.parse import urlparse, urlunparse
 
 import mlflow
 import yaml
-from denoising_diffusion_pytorch import GaussianDiffusion, Trainer, Unet
+from denoising_diffusion_pytorch import GaussianDiffusion, Trainer, Unet, CellMapDatasets3Das2D, CellMapDataset3Das2D
 
 from {{cookiecutter.project_slug}}.config import (
     ExperimentConfig,
@@ -36,19 +36,25 @@ def run():
         repo, commit_hash = get_repo_and_commit_cwd()
         mlflow.log_param("repo", repo)
         mlflow.log_param("commit", commit_hash)
-
-        mlflow.log_params(flatten_dict(config.model_dump()))
+        mlflow.log_params(flatten_dict(config.dict()))
         mlflow.pytorch.autolog()
-        architecture = config.architecture.get_constructor()(
-            **config.architecture.model_dump()
-        )
+        architecture = config.architecture.get_constructor()(**config.architecture.dict())
 
         diffusion = config.diffusion.get_constructor()(
-            architecture, image_size=config.image_size, **config.diffusion.model_dump()
+            architecture, image_size=config.image_size, **config.diffusion.dict()
         )
-        data_args = config.data
+        data_args = config.data.dict()
+        del data_args["data_type"]
         data_args["image_size"] = config.image_size
         dataset = config.data.get_constructor()(**data_args)
+        if isinstance(dataset, CellMapDatasets3Das2D):
+            crop_list = []
+            for ds in dataset.datasets:
+                crop_list.extend([c.crop_name for c in ds.crops])
+            mlflow.log_param("crop_list", crop_list)
+        elif isinstance(dataset, CellMapDataset3Das2D):
+            crop_list = [c.crop_name for c in dataset.crops]
+            mlflow.log_param("crop_list", crop_list)
         parsed_artifact_uri = urlparse(mlflow.get_artifact_uri())
         if parsed_artifact_uri.scheme != "file":
             raise NotImplementedError(
@@ -58,7 +64,7 @@ def run():
             diffusion,
             dataset,
             results_folder=parsed_artifact_uri.path,
-            **config.training.model_dump(),
+            **config.training.dict(),
         )
         trainer.train()
 
