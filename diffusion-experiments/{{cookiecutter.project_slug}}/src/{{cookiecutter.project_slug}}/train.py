@@ -50,7 +50,7 @@ def run():
         if isinstance(dataset, CellMapDatasets3Das2D):
             crop_list = []
             for ds in dataset.datasets:
-                crop_list.extend([c.crop_name for c in ds.crops])
+                crop_list.append([c.crop_name for c in ds.crops])
             mlflow.log_param("crop_list", crop_list)
         elif isinstance(dataset, CellMapDataset3Das2D):
             crop_list = [c.crop_name for c in dataset.crops]
