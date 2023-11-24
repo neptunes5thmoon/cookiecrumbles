@@ -10,6 +10,9 @@ from {{cookiecutter.project_slug}}.config import (
     TrackingConfig,
 )
 from {{cookiecutter.project_slug}}.utility import flatten_dict, get_repo_and_commit_cwd
+import warnings
+
+warnings.filterwarnings("ignore", module="pydantic_ome_ngff") # line104
 
 def track(config: TrackingConfig):
     parsed_uri = urlparse(config.tracking_uri)
