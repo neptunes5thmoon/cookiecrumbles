@@ -4,7 +4,9 @@ diffusion:
   sampling_timesteps: 250
   loss_type: l1
   auto_normalize: False
+  channel_weichannelghts: [
             1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,31
+        ]
 architecture:
   dim: 64
   channels: 32
@@ -17,6 +19,10 @@ training:
   ema_decay: 0.995
   amp: False
   calculate_fid: False
+  dataloader_nworkers: 88
+  persitent_workers: True
+  prefetch_factor: 2
+
 data:
   data_type: "cellmap3das2d"
   data_paths: ["/nrs/cellmap/data/jrc_hela-2/jrc_hela-2.n5",
@@ -25,6 +31,7 @@ data:
                "/nrs/cellmap/data/jrc_sum159-1/jrc_sum159-1.n5",
                "/nrs/cellmap/data/jrc_jurkat-1/jrc_jurkat-1.n5"
   ]
+  raw_datasets: [None, None, None, None, None]
   class_list: [
             "ecs",
             "pm",
@@ -61,11 +68,13 @@ data:
   scale: {"x":4, "y":4, "z":4}
   augment_horizontal_flip: True
   augment_vertical_flip: True
-  annotation_paths: ["/nrs/cellmap/data/jrc_hela-2/staging/groundtruth.zarr",
-               "/nrs/cellmap/data/jrc_hela-3/staging/groundtruth.zarr",
-               "/nrs/cellmap/data/jrc_macrophage-2/staging/groundtruth.zarr",
-               "/nrs/cellmap/data/jrc_sum159-1/staging/groundtruth.zarr",
-               "/nrs/cellmap/data/jrc_jurkat-1/staging/groundtruth.zarr"]
+  annotation_paths: ["/home/heinrichl@hhmi.org/data/cellmap/reslicing/jrc_hela-2/groundtruth.zarr",
+                     "/home/heinrichl@hhmi.org/data/cellmap/reslicing/jrc_hela-3/groundtruth.zarr",
+                     "/home/heinrichl@hhmi.org/data/cellmap/reslicing/jrc_macrophage-2/groundtruth.zarr",
+                     "/home/heinrichl@hhmi.org/data/cellmap/reslicing/jrc_sum159-1/groundtruth.zarr",
+                     "/home/heinrichl@hhmi.org/data/cellmap/reslicing/jrc_jurkat-1/groundtruth.zarr"]
+  dask_workers: 1
+  
 tracking:
   experiment_name: {{cookiecutter.project_name}}
   tracking_uri: file:///nrs/saalfeld/heinrichl/mlflow_tracking/diffusion

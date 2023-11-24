@@ -28,6 +28,9 @@ class TrainingConfig(BaseModel):
     ema_decay: float
     amp: bool
     calculate_fid: bool
+    dataloader_nworkers: int = 88
+    persistent_workers: bool = True
+    prefetch_factor: int = 2
 
 
 class UnetConfig(BaseModel):
@@ -65,6 +68,7 @@ class CellMapDataset3Das2DConfig(BaseModel):
     annotation_path: Optional[str] = None
     crop_list: Optional[Sequence[str]] = None
     raw_dataset: Optional[str] = None
+    dask_workers: int = 0
     def get_constructor(self):
         return CellMapDataset3Das2D
 
@@ -79,7 +83,7 @@ class CellMapDatasets3Das2DConfig(BaseModel):
     allow_single_class_crops: Union[None, Sequence[Union[str,None]]] = None
     crop_lists: Union[None, Sequence[Union[None, Sequence[str]]]] = None
     raw_datasets: Union[None, Sequence[str]] = None
-
+    dask_workers: int = 0
     def get_constructor(self):
         return CellMapDatasets3Das2D
 
