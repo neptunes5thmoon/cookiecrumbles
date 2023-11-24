@@ -4,6 +4,7 @@ diffusion:
   sampling_timesteps: 250
   loss_type: l1
   auto_normalize: False
+            1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,31
 architecture:
   dim: 64
   channels: 32
