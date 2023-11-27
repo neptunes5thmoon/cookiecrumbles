@@ -3,7 +3,7 @@ diffusion:
   timesteps: 1000
   sampling_timesteps: 250
   auto_normalize: False
-  channel_weichannelghts: [
+  channel_weights: [
             1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,31
         ]
 architecture:
