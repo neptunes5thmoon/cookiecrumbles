@@ -73,6 +73,7 @@ data:
                      "/home/heinrichl@hhmi.org/data/cellmap/reslicing/jrc_sum159-1/groundtruth.zarr",
                      "/home/heinrichl@hhmi.org/data/cellmap/reslicing/jrc_jurkat-1/groundtruth.zarr"]
   dask_workers: 1
+  pre_load: True
   
 tracking:
   experiment_name: {{cookiecutter.project_name}}
