@@ -74,6 +74,7 @@ data:
                      "/home/heinrichl@hhmi.org/data/cellmap/reslicing/jrc_jurkat-1/groundtruth.zarr"]
   dask_workers: 1
   pre_load: True
+  contrast_adjust: True
   
 tracking:
   experiment_name: {{cookiecutter.project_name}}
