@@ -75,6 +75,7 @@ data:
   dask_workers: 1
   pre_load: True
   contrast_adjust: True
+  include_raw: True
   
 tracking:
   experiment_name: {{cookiecutter.project_name}}

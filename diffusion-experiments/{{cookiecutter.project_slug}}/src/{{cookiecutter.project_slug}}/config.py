@@ -71,6 +71,7 @@ class CellMapDataset3Das2DConfig(BaseModel):
     dask_workers: int = 0
     pre_load: bool = False
     contrast_adjust: bool = True
+    include_raw: bool = True
     def get_constructor(self):
         return CellMapDataset3Das2D
 
@@ -88,6 +89,7 @@ class CellMapDatasets3Das2DConfig(BaseModel):
     dask_workers: int = 0
     pre_load: bool = False
     contrast_adjust: bool = True
+    include_raw: bool = True
     def get_constructor(self):
         return CellMapDatasets3Das2D
 
