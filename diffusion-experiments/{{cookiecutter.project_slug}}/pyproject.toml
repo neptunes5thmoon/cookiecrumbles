@@ -9,7 +9,8 @@ dependencies = [
   "mlflow",
   "pydantic",
   "GitPython",
-  "zarr"
+  "zarr",
+  "click",
 ]
 name = "{{cookiecutter.project_slug}}"
 dynamic = ["version"]

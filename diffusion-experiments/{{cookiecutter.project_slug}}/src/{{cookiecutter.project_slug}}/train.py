@@ -12,7 +12,8 @@ from {{cookiecutter.project_slug}}.config import (
 from {{cookiecutter.project_slug}}.utility import flatten_dict, get_repo_and_commit_cwd
 import warnings
 
-warnings.filterwarnings("ignore", module="pydantic_ome_ngff") # line104
+warnings.filterwarnings("ignore", module="pydantic_ome_ngff")  # line104
+
 
 def track(config: TrackingConfig):
     parsed_uri = urlparse(config.tracking_uri)
@@ -35,6 +36,8 @@ def run():
     config = ExperimentConfig(**yaml_data)
 
     run_id = track(config.tracking)
+    if config.tracking.continue_run_id is None:
+        config.tracking.continue_run_id = run_id
     with mlflow.start_run(run_id=run_id):
         repo, commit_hash = get_repo_and_commit_cwd()
         mlflow.log_param("repo", repo)
@@ -46,6 +49,7 @@ def run():
         diffusion = config.diffusion.get_constructor()(
             architecture, image_size=config.image_size, **config.diffusion.dict()
         )
+        sample_exporter = config.exporter.get_constructor()(**config.exporter.dict())
         data_args = config.data.dict()
         del data_args["data_type"]
         data_args["image_size"] = config.image_size
@@ -66,7 +70,8 @@ def run():
         trainer = Trainer(
             diffusion,
             dataset,
-            results_folder=parsed_artifact_uri.path,
+            sample_exporter,
+            results_folder=os.path.join(parsed_artifact_uri.path, "checkpoints"),
             **config.training.dict(),
         )
         trainer.train()
