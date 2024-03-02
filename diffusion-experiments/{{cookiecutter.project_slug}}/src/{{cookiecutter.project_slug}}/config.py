@@ -4,12 +4,14 @@ from denoising_diffusion_pytorch import (
     CellMapDataset3Das2D,
     CellMapDatasets3Das2D,
     GaussianDiffusion,
-    PostProcessOptions,
-    PostProcessOptionsNames,
+    ProcessOptions,
+    ProcessOptionsNames,
     SampleExporter,
     SimpleDataset,
     Unet,
     ZarrDataset,
+    RawChannelOptions,
+    LabelRepresentation
 )
 from pydantic import BaseModel, Field
 
@@ -71,7 +73,7 @@ class ZarrDataConfig(BaseModel):
 
 class CellMapDataset3Das2DConfig(BaseModel):
     data_type: Literal["cellmap3das2d_single"]
-    data_paths: Sequence[str]
+    data_path: str
     class_list: Sequence[str]
     scale: Dict[Literal["x", "y", "z"], int]
     augment_horizontal_flip: bool = True
@@ -83,7 +85,8 @@ class CellMapDataset3Das2DConfig(BaseModel):
     dask_workers: int = 0
     pre_load: bool = False
     contrast_adjust: bool = True
-    include_raw: bool = True
+    raw_channel: RawChannelOptions = "append"
+    label_representation: LabelRepresentation = "binary"
 
     def get_constructor(self):
         return CellMapDataset3Das2D
@@ -103,7 +106,8 @@ class CellMapDatasets3Das2DConfig(BaseModel):
     dask_workers: int = 0
     pre_load: bool = False
     contrast_adjust: bool = True
-    include_raw: bool = True
+    raw_channel: RawChannelOptions = "append"
+    label_representation: LabelRepresentation = "binary"
 
     def get_constructor(self):
         return CellMapDatasets3Das2D

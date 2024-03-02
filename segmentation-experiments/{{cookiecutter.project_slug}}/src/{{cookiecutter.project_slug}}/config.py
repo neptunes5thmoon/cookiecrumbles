@@ -6,22 +6,24 @@ from denoising_diffusion_pytorch import (
     BaselineSegmentation,
     BaselineSegmentationTrainer,
     LabelRepresentation,
-    PostProcessOptions,
-    PostProcessOptionsNames,
+    ProcessOptions,
+    ProcessOptionsNames,
+    SegmentationActivationNames,
     SegmentationMetrics,
     SegmentationMetricsNames,
     SampleExporter,
     SimpleDataset,
     Unet,
     ZarrDataset,
-    RawChannelOptions
+    RawChannelOptions,
 )
 from pydantic import BaseModel, Field
 
 
 class BaselineSegmentationConfig(BaseModel):
     loss_fn: SegmentationMetricsNames = "CROSS_ENTROPY"
-    
+    activation: Union[None,SegmentationActivationNames] = None
+
     def get_constructor(self):
         return BaselineSegmentation
 
@@ -43,10 +45,10 @@ class UnetConfig(BaseModel):
     dim: int
     channels: int
     dim_mults: Tuple[int, ...]
+    out_dim: int
 
     def get_constructor(self):
         return Unet
-
 
 
 class CellMapDataset3Das2DConfig(BaseModel):
@@ -65,6 +67,7 @@ class CellMapDataset3Das2DConfig(BaseModel):
     contrast_adjust: bool = True
     raw_channel: RawChannelOptions = "first"
     label_representation: LabelRepresentation = "class_ids"
+    random_crop: bool = True
 
     def get_constructor(self):
         return CellMapDataset3Das2D
@@ -86,6 +89,7 @@ class CellMapDatasets3Das2DConfig(BaseModel):
     contrast_adjust: bool = True
     raw_channel: RawChannelOptions = "first"
     label_representation: LabelRepresentation = "class_ids"
+    random_crop: bool = True
 
     def get_constructor(self):
         return CellMapDatasets3Das2D
@@ -99,12 +103,12 @@ class TrackingConfig(BaseModel):
 
 
 class SampleExporterConfig(BaseModel):
-    channel_assignment: Dict[str, Tuple[Tuple[int, int, int], Sequence[Union[None, PostProcessOptionsNames]]]]
+    channel_assignment: Dict[str, Tuple[Tuple[int, int, int], Sequence[Union[None, ProcessOptionsNames]]]]
     sample_digits: int = 5
     file_format: Literal[".zarr", ".png"] = ".zarr"
     sample_batch_size: int = 1
     colors: Optional[Sequence[Union[Tuple[int, int, int], Sequence[Tuple[float, float, float]]]]] = None
-    color_threshold: int = 0
+    threshold: int = 0
 
     def get_constructor(self):
         return SampleExporter
@@ -119,10 +123,11 @@ class ExperimentConfig(BaseModel):
     )
     validation_data: Union[CellMapDatasets3Das2DConfig, CellMapDataset3Das2DConfig] = Field(
         ..., discriminator="data_type"
-    ) 
+    )
     training: TrainingConfig
     tracking: TrackingConfig
-    exporter: SampleExporterConfig
+    loader_exporter: SampleExporterConfig
+    prediction_exporter: SampleExporterConfig
 
 
 class InferenceConfig(BaseModel):

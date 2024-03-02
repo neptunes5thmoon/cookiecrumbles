@@ -3,7 +3,14 @@ from urllib.parse import urlparse, urlunparse
 
 import mlflow
 import yaml
-from denoising_diffusion_pytorch import Unet, CellMapDataset3Das2D, CellMapDatasets3Das2D, BaselineSegmentation, BaselineSegmentationTrainer, SampleExporter
+from denoising_diffusion_pytorch import (
+    Unet,
+    CellMapDataset3Das2D,
+    CellMapDatasets3Das2D,
+    BaselineSegmentation,
+    BaselineSegmentationTrainer,
+    SampleExporter,
+)
 
 from {{cookiecutter.project_slug}}.config import (
     ExperimentConfig,
@@ -46,15 +53,16 @@ def run():
         mlflow.pytorch.autolog()
         architecture = config.architecture.get_constructor()(**config.architecture.dict())
 
-        segmentation = config.diffusion.get_constructor()(
+        segmentation = config.segmentation.get_constructor()(
             architecture, image_size=config.image_size, **config.segmentation.dict()
         )
-        sample_exporter = config.exporter.get_constructor()(**config.exporter.dict())
+        prediction_exporter = config.prediction_exporter.get_constructor()(**config.prediction_exporter.dict())
+        loader_exporter = config.loader_exporter.get_constructor()(**config.loader_exporter.dict())
         training_data_args = config.training_data.dict()
         del training_data_args["data_type"]
         training_data_args["image_size"] = config.image_size
         training_dataset = config.training_data.get_constructor()(**training_data_args)
-        
+
         validation_data_args = config.validation_data.dict()
         del validation_data_args["data_type"]
         validation_data_args["image_size"] = config.image_size
@@ -83,9 +91,10 @@ def run():
         trainer = BaselineSegmentationTrainer(
             segmentation,
             training_dataset,
-            sample_exporter,
+            loader_exporter,
+            prediction_exporter,
             results_folder=os.path.join(parsed_artifact_uri.path, "checkpoints"),
-            validation_dataset = validation_dataset,
+            validation_dataset=validation_dataset,
             **config.training.dict(),
         )
         trainer.train()
