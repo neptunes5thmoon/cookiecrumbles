@@ -5,6 +5,7 @@ from denoising_diffusion_pytorch import (
     CellMapDatasets3Das2D,
     BaselineSegmentation,
     BaselineSegmentationTrainer,
+    BatchedZarrSamples,
     LabelRepresentation,
     ProcessOptions,
     ProcessOptionsNames,
@@ -29,7 +30,7 @@ class BaselineSegmentationConfig(BaseModel):
 
 
 class TrainingConfig(BaseModel):
-    train_batch_size: int
+    train_batch_size: int | None
     validation_criteria: Union[None, Sequence[SegmentationMetricsNames]] = ["CROSS_ENTROPY"]
     validation_batch_size: int
     gradient_accumulate_every: int
@@ -95,6 +96,17 @@ class CellMapDatasets3Das2DConfig(BaseModel):
         return CellMapDatasets3Das2D
 
 
+class BatchedZarrSamplesConfig(BaseModel):
+    data_type: Literal["batchedzarrsamples"]
+    zarr_path: str
+    labels: str = "labels"
+    raw: str = "raw"
+    raw_channel: RawChannelOptions = "append"
+    def get_constructor(self):
+        return BatchedZarrSamples
+    
+
+
 class TrackingConfig(BaseModel):
     experiment_name: str
     tracking_uri: str
@@ -118,7 +130,7 @@ class ExperimentConfig(BaseModel):
     image_size: int
     architecture: UnetConfig  # turn this into union to add more architectures
     segmentation: BaselineSegmentationConfig
-    training_data: Union[CellMapDatasets3Das2DConfig, CellMapDataset3Das2DConfig] = Field(
+    training_data: Union[CellMapDatasets3Das2DConfig, CellMapDataset3Das2DConfig, BatchedZarrSamplesConfig] = Field(
         ..., discriminator="data_type"
     )
     validation_data: Union[CellMapDatasets3Das2DConfig, CellMapDataset3Das2DConfig] = Field(
