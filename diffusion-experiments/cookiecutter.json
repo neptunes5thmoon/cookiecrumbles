@@ -9,13 +9,16 @@
     "my_repo_deps": {
         "repo": [
             "denoising-diffusion-pytorch@git+ssh://git@github.com/neptunes5thmoon/denoising-diffusion-pytorch.git",
-            "labelcomposer@git+ssh://git@github.com/saalfeldlab/labelcomposer.git"
+            "labelcomposer@git+ssh://git@github.com/saalfeldlab/labelcomposer.git",
+            "cellmap-utils-kit@git+ssh://git@github.com/saalfeldlab/cellmap-utils-kit.git"
         ],
         "branch": [
             "mymain",
+            "main",
             "main"
         ],
         "use_latest_commit": [
+            true,
             true,
             true
         ]
