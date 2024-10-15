@@ -48,9 +48,6 @@ allow-direct-references = true
 
 [tool.hatch.envs.default]
 dependencies = ["coverage[toml]>=6.5", "pytest"]
-type = "conda"
-command = "mamba"
-conda-forge = true
 
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
@@ -62,9 +59,6 @@ cov = ["test-cov", "cov-report"]
 python = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
 [tool.hatch.envs.lint]
-type = "conda"
-command = "mamba"
-conda-forge = true
 detached = true
 dependencies = ["black>=23.1.0", "mypy>=1.0.0", "ruff>=0.0.243"]
 
