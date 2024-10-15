@@ -222,3 +222,7 @@ exporter:
       - 128
   sample_batch_size: 20
   file_format: .png
+tracking:
+  experiment_name: {{cookiecutter.project_name}}
+  tracking_uri: file:///nrs/saalfeld/heinrichl/mlflow_tracking/diffusion
+  run_name: {{cookiecutter.project_slug}}
