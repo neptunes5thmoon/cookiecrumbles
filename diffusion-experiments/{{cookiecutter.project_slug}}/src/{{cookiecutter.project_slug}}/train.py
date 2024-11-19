@@ -59,6 +59,11 @@ def run():
         del data_args["data_type"]
         data_args["image_size"] = config.image_size
         dataset = config.data.get_constructor()(**data_args)
+        if config.exporter.annotations is None:
+            config.exporter.annotations = dataset.sample_requests
+        sample_exporter = config.exporter.get_constructor()(
+            **config.exporter.model_dump()
+        )
         if isinstance(dataset, CellMapDatasets3Das2D):
             crop_list = []
             for ds in dataset.datasets:

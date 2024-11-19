@@ -145,6 +145,10 @@ class SampleExporterConfig(BaseModel):
         Sequence[Union[Tuple[int, int, int], Sequence[Tuple[float, float, float]]]]
     ] = None
     threshold: int = 0
+    annotation_colors: Optional[
+        Dict[str, Tuple[int, int, int]]
+    ] = None
+    annotations: Optional[Sequence[Sequence[str]]] = None
 
     def get_constructor(self):
         return SampleExporter
