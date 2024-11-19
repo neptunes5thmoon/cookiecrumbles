@@ -45,17 +45,17 @@ def run():
         repo, commit_hash = get_repo_and_commit_cwd()
         mlflow.log_param("repo", repo)
         mlflow.log_param("commit", commit_hash)
-        mlflow.log_params(flatten_dict(config.dict()))
+        mlflow.log_params(flatten_dict(config.model_dump()))
         mlflow.pytorch.autolog()
         architecture = config.architecture.get_constructor()(
-            **config.architecture.dict()
+            **config.architecture.model_dump()
         )
 
         diffusion = config.diffusion.get_constructor()(
-            architecture, image_size=config.image_size, **config.diffusion.dict()
+            architecture, image_size=config.image_size, **config.diffusion.model_dump()
         )
-        sample_exporter = config.exporter.get_constructor()(**config.exporter.dict())
-        data_args = config.data.dict()
+
+        data_args = config.data.model_dump()
         del data_args["data_type"]
         data_args["image_size"] = config.image_size
         dataset = config.data.get_constructor()(**data_args)
@@ -69,15 +69,14 @@ def run():
             mlflow.log_param("crop_list", crop_list)
         parsed_artifact_uri = urlparse(mlflow.get_artifact_uri())
         if parsed_artifact_uri.scheme != "file":
-            raise NotImplementedError(
-                f"Using a {parsed_artifact_uri.scheme} connection to save artifacts is not implemented"
-            )
+            msg = f"Using a {parsed_artifact_uri.scheme} connection to save artifacts is not implemented"
+            raise NotImplementedError(msg)
         trainer = Trainer(
             diffusion,
             dataset,
             sample_exporter,
             results_folder=os.path.join(parsed_artifact_uri.path, "checkpoints"),
-            **config.training.dict(),
+            **config.training.model_dump(),
         )
         trainer.train()
 
