@@ -39,6 +39,7 @@ diffusion:
 architecture:
   dim: 64
   channels: 32
+  num_classes: 32
   dim_mults: 
     - 1
     - 2
@@ -102,8 +103,87 @@ data:
   pre_load: True
   contrast_adjust: True
   raw_channel: append
-  classes: null
-
+  classes: label_bag
+  sample_requests: 
+    - - ecs
+      - pm
+    - - mito_mem
+      - mito_lum
+      - mito_ribo
+    - - golgi_lum
+      - golgi_mem
+      - ves_mem
+      - ves_lum
+    - - endo_lum
+      - endo_mem
+      - lyso_lum
+      - lyso_mem
+    - - ecs
+    - - er_mem
+      - er_lum
+      - eres_lum
+      - eres_mem
+    - - er_mem
+      - er_lum
+    - - ne_mem
+      - ne_lum
+      - np_out
+      - np_in
+      - hchrom
+      - echrom
+      - nucpl
+    - - ne_mem
+      - ne_lum
+      - hchrom
+      - echrom
+      - nucpl
+    - - ne_mem
+      - ne_lum
+      - np_out
+      - np_in
+      - hchrom
+      - nhchrom
+      - echrom
+      - nechrom
+      - nucpl
+      - nucleo
+    - - hchrom
+      - nhchrom
+      - echrom
+      - nechrom
+      - nucpl
+      - nucleo
+    - - mt_out
+      - mt_in
+      - er_mem
+      - er_lum
+    - - er_mem
+      - er_lum
+      - mito_mem
+      - mito_lum
+      - mito_ribo
+    - - ecs
+      - pm
+      - er_lum
+      - er_mem
+    - - ld_lum
+      - ld_mem 
+    - - ld_lum
+      - ld_mem
+      - mito_lum
+      - mito_mem
+    - - ne_mem
+      - ne_lum
+      - er_mem
+      - er_lum
+      - hchrom
+      - echrom
+      - nucpl
+    - - nucleo
+    - - mito_lum
+      - mito_mem
+    - - endo_mem
+      - mito_mem
 exporter:
   channel_assignment: 
     label:
@@ -220,7 +300,7 @@ exporter:
     - - 128
       - 128
       - 128
-  sample_batch_size: 20
+  sample_batch_size: 25
   file_format: .png
 tracking:
   experiment_name: {{cookiecutter.project_name}}

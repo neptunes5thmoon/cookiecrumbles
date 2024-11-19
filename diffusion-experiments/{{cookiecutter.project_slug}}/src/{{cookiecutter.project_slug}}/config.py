@@ -121,6 +121,7 @@ class CellMapDatasets3Das2DConfig(BaseModel):
     label_representation: LabelRepresentation = "binary"
     random_crop: bool = True
     classes: Optional[ClassOptions] = None
+    sample_requests: Optional[Sequence[Union[str, Sequence[str]]]] = None
 
     def get_constructor(self):
         return CellMapDatasets3Das2D
